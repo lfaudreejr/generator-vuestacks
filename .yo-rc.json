@@ -1,0 +1,9 @@
+{
+  "generator-node": {
+    "promptValues": {
+      "authorName": "Larry Faudree",
+      "authorEmail": "lfaudreejr@hotmail.com",
+      "authorUrl": "larryfaudree.surge.sh"
+    }
+  }
+}
