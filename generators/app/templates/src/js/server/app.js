@@ -29,10 +29,10 @@ app.use(lusca.xssProtection(true));
  * Serving static production files
  */
 if (process.env.NODE_ENV === 'production') {
-  app.use('/', express.static(path.join(__dirname, './client')));
+  app.use('/', express.static(path.join(__dirname, '../dist/client')));
 
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, './client/dist/index.html'));
+    res.sendFile(path.join(__dirname, '../dist/client/index.html'));
   });
 }
 
@@ -54,4 +54,4 @@ app.use((err, req, res, next) => {
   res.status(Number(err.message) || 500).json(err);
 });
 
-export default app;
+module.exports = app;

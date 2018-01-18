@@ -15,14 +15,23 @@
     "start": "npm run dev",
     "debug": "DEBUG=app:* npm run dev:server",
     "dev": "NODE_ENV=development concurrently \"npm run dev:client\" \"npm run debug\"",
-    "dev:client": "webpack-dev-server --inline --progress --config src/client/build/webpack.dev.conf.js",
+    <% if (tsServer) { %>
     "dev:server": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/server/bin/server.ts",
+    "dev:client": "webpack-dev-server --inline --progress --config src/client/build/webpack.dev.conf.js",
+    <% } else { %>
+    "dev:server": "nodemon server/bin/server.js",
+    "dev:client": "webpack-dev-server --inline --progress --config client/build/webpack.dev.conf.js",
+    <% } %>
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "test:client": "npm run unit",
     "lint:client": "eslint --ext .js,.vue src test/unit",
+    <% if (tsServer) { %>
     "build": "concurrently \"npm run build:server\" \"npm run build:client\"",
     "build:client": "node src/client/build/build.js",
     "build:server": "tsc --project tsconfig.json"
+    <% } else { %>
+    "build": "node client/build/build.js"
+    <% } %>
   },
   "dependencies": {
     "vue": "^2.5.2",
@@ -86,16 +95,18 @@
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-dev-server": "^2.9.1",
     "webpack-merge": "^4.1.0",
+    <% if (tsServer) { %>
     "@types/body-parser": "^1.16.8",
     "@types/compression": "0.0.35",
     "@types/debug": "0.0.30",
     "@types/express": "^4.11.0",
     "@types/morgan": "^1.7.35",
-    "concurrently": "^3.5.1",
-    "nodemon": "^1.14.8",
     "ts-node": "^4.1.0",
     "tslint": "^5.8.0",
     "typescript": "^2.6.2"
+    <% } %>
+    "concurrently": "^3.5.1",
+    "nodemon": "^1.14.8"
   },
   "engines": {
     "node": ">= 6.0.0",

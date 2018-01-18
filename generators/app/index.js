@@ -69,14 +69,15 @@ module.exports = class extends Generator {
     this._writeReadMe();
 
     if (this.props.tsServer) {
+      this._writeSrc();
       this._writeTSServer();
+      this._writeSrcClientTSServer();
+      this._writeSrcClientFoldersTSServer();
     } else {
       this._writeJSServer();
+      this._writeSrcClientJSServer();
+      this._writeSrcClientFoldersJSServer();
     }
-
-    this._writeSrc();
-    this._writeSrcClient();
-    this._writeSrcClientFolders();
   }
 
   _writePackageJSON() {
@@ -88,7 +89,8 @@ module.exports = class extends Generator {
         description: this.props.description,
         author: this.props.author,
         repository: this.props.repository,
-        license: this.props.license
+        license: this.props.license,
+        tsServer: this.props.tsServer
       }
     );
   }
@@ -113,8 +115,8 @@ module.exports = class extends Generator {
 
   _writeJSServer() {
     this.fs.copyTpl(
-      this.templatePath('src/server/js/**'),
-      this.destinationPath('src/server')
+      this.templatePath('src/js/server/**'),
+      this.destinationPath('server')
     );
   }
 
@@ -140,30 +142,30 @@ module.exports = class extends Generator {
 
   _writeTSSSrcServer() {
     this.fs.copyTpl(
-      this.templatePath('src/server/ts/**'),
+      this.templatePath('src/ts/server/**'),
       this.destinationPath('src/server')
     );
   }
 
-  _writeSrcClient() {
+  _writeSrcClientTSServer() {
     this.fs.copyTpl(
-      this.templatePath('src/client/_babelrc'),
+      this.templatePath('src/ts/client/_babelrc'),
       this.destinationPath('src/client/.babelrc')
     );
     this.fs.copyTpl(
-      this.templatePath('src/client/_eslintignore'),
+      this.templatePath('src/ts/client/_eslintignore'),
       this.destinationPath('src/client/.eslintignore')
     );
     this.fs.copyTpl(
-      this.templatePath('src/client/_eslintrc.js'),
+      this.templatePath('src/ts/client/_eslintrc.js'),
       this.destinationPath('src/client/.eslintrc.js')
     );
     this.fs.copyTpl(
-      this.templatePath('src/client/_postcssrc.js'),
+      this.templatePath('src/ts/client/_postcssrc.js'),
       this.destinationPath('src/client/.postcssrc.js')
     );
     this.fs.copyTpl(
-      this.templatePath('src/client/_index.html'),
+      this.templatePath('src/ts/client/_index.html'),
       this.destinationPath('src/client/index.html'),
       {
         name: this.props.name
@@ -171,48 +173,119 @@ module.exports = class extends Generator {
     );
   }
 
-  _writeSrcClientFolders() {
+  _writeSrcClientFoldersTSServer() {
     this.fs.copyTpl(
-      this.templatePath('src/client/build/**'),
+      this.templatePath('src/ts/client/build/**'),
       this.destinationPath('src/client/build')
     );
     this.fs.copyTpl(
-      this.templatePath('src/client/config/**'),
+      this.templatePath('src/ts/client/config/**'),
       this.destinationPath('src/client/config')
     );
     this.fs.copy(
-      this.templatePath('src/client/src/assets/_logo.png'),
+      this.templatePath('src/ts/client/src/assets/_logo.png'),
       this.destinationPath('src/client/src/assets/logo.png')
     );
     this.fs.copyTpl(
-      this.templatePath('src/client/src/components/_HelloWorld.vue'),
+      this.templatePath('src/ts/client/src/components/_HelloWorld.vue'),
       this.destinationPath('src/client/src/components/HelloWorld.vue'),
       {
         name: this.props.name
       }
     );
     this.fs.copyTpl(
-      this.templatePath('src/client/src/router/**'),
+      this.templatePath('src/ts/client/src/router/**'),
       this.destinationPath('src/client/src/router')
     );
     this.fs.copyTpl(
-      this.templatePath('src/client/src/_App.vue'),
+      this.templatePath('src/ts/client/src/_App.vue'),
       this.destinationPath('src/client/src/App.vue'),
       {
         name: this.props.name
       }
     );
     this.fs.copyTpl(
-      this.templatePath('src/client/src/_main.js'),
+      this.templatePath('src/ts/client/src/_main.js'),
       this.destinationPath('src/client/src/main.js')
     );
     this.fs.copy(
-      this.templatePath('src/client/static/_logo.png'),
+      this.templatePath('src/ts/client/static/_logo.png'),
       this.destinationPath('src/client/static/logo.png')
     );
     this.fs.copyTpl(
-      this.templatePath('src/client/test/**'),
+      this.templatePath('src/ts/client/test/**'),
       this.destinationPath('src/client/test')
+    );
+  }
+
+  _writeSrcClientJSServer() {
+    this.fs.copyTpl(
+      this.templatePath('src/js/client/_babelrc'),
+      this.destinationPath('client/.babelrc')
+    );
+    this.fs.copyTpl(
+      this.templatePath('src/js/client/_eslintignore'),
+      this.destinationPath('client/.eslintignore')
+    );
+    this.fs.copyTpl(
+      this.templatePath('src/js/client/_eslintrc.js'),
+      this.destinationPath('client/.eslintrc.js')
+    );
+    this.fs.copyTpl(
+      this.templatePath('src/js/client/_postcssrc.js'),
+      this.destinationPath('client/.postcssrc.js')
+    );
+    this.fs.copyTpl(
+      this.templatePath('src/js/client/_index.html'),
+      this.destinationPath('client/index.html'),
+      {
+        name: this.props.name
+      }
+    );
+  }
+
+  _writeSrcClientFoldersJSServer() {
+    this.fs.copyTpl(
+      this.templatePath('src/js/client/build/**'),
+      this.destinationPath('client/build')
+    );
+    this.fs.copyTpl(
+      this.templatePath('src/js/client/config/**'),
+      this.destinationPath('client/config')
+    );
+    this.fs.copy(
+      this.templatePath('src/js/client/src/assets/_logo.png'),
+      this.destinationPath('client/src/assets/logo.png')
+    );
+    this.fs.copyTpl(
+      this.templatePath('src/js/client/src/components/_HelloWorld.vue'),
+      this.destinationPath('client/src/components/HelloWorld.vue'),
+      {
+        name: this.props.name
+      }
+    );
+    this.fs.copyTpl(
+      this.templatePath('src/js/client/src/router/**'),
+      this.destinationPath('client/src/router')
+    );
+    this.fs.copyTpl(
+      this.templatePath('src/js/client/src/_App.vue'),
+      this.destinationPath('client/src/App.vue'),
+      {
+        name: this.props.name
+      }
+    );
+    this.fs.copyTpl(
+      this.templatePath('src/js/client/src/_main.js'),
+      this.destinationPath('client/src/main.js')
+    );
+    this.fs.copy(
+      this.templatePath('src/js/client/static/_logo.png'),
+      this.destinationPath('client/static/logo.png')
+    );
+    this.fs.copyTpl(
+      this.templatePath('src/js/client/test/**'),
+      this.destinationPath('client/test')
     );
   }
 
