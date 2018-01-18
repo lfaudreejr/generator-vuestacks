@@ -43,6 +43,12 @@ module.exports = class extends Generator {
         name: 'license',
         message: 'License',
         default: 'MIT'
+      },
+      {
+        type: 'confirm',
+        name: 'tsServer',
+        message: 'Use Typescript with the backend?',
+        defaults: false
       }
     ];
 
@@ -61,10 +67,14 @@ module.exports = class extends Generator {
     this._writePackageJSON();
     this._writeGitignore();
     this._writeReadMe();
-    this._writeTSConfig();
-    this._writeTSLint();
+
+    if (this.props.tsServer) {
+      this._writeTSServer();
+    } else {
+      this._writeJSServer();
+    }
+
     this._writeSrc();
-    this._writeSrcServer();
     this._writeSrcClient();
     this._writeSrcClientFolders();
   }
@@ -97,6 +107,23 @@ module.exports = class extends Generator {
     });
   }
 
+  _writeSrc() {
+    mkdirp('src');
+  }
+
+  _writeJSServer() {
+    this.fs.copyTpl(
+      this.templatePath('src/server/js/**'),
+      this.destinationPath('src/server')
+    );
+  }
+
+  _writeTSServer() {
+    this._writeTSConfig();
+    this._writeTSLint();
+    this._writeTSSrcServer();
+  }
+
   _writeTSConfig() {
     this.fs.copyTpl(
       this.templatePath('_tsconfig.json'),
@@ -111,13 +138,9 @@ module.exports = class extends Generator {
     );
   }
 
-  _writeSrc() {
-    mkdirp('src');
-  }
-
-  _writeSrcServer() {
+  _writeTSSSrcServer() {
     this.fs.copyTpl(
-      this.templatePath('src/server/**'),
+      this.templatePath('src/server/ts/**'),
       this.destinationPath('src/server')
     );
   }
