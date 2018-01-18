@@ -46,9 +46,15 @@ module.exports = class extends Generator {
       },
       {
         type: 'confirm',
+        name: 'procfile',
+        message: 'Would you like a Procfile?',
+        default: false
+      },
+      {
+        type: 'confirm',
         name: 'tsServer',
         message: 'Use Typescript with the backend?',
-        defaults: false
+        default: false
       }
     ];
 
@@ -67,6 +73,10 @@ module.exports = class extends Generator {
     this._writePackageJSON();
     this._writeGitignore();
     this._writeReadMe();
+
+    if (this.props.procfile) {
+      this._writeProcfile();
+    }
 
     if (this.props.tsServer) {
       this._writeSrc();
@@ -107,6 +117,10 @@ module.exports = class extends Generator {
       license: this.props.license,
       year: new Date().getFullYear()
     });
+  }
+
+  _writeProcfile() {
+    this.fs.copyTpl(this.templatePath('_Procfile'), this.destinationPath('Procfile'));
   }
 
   _writeSrc() {

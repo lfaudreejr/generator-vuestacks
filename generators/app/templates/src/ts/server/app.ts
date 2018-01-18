@@ -4,7 +4,8 @@ import * as compression from "compression";
 import * as lusca from "lusca";
 import * as morgan from "morgan";
 import * as path from "path";
-import { NextFunction } from "express-serve-static-core";
+
+import router from "./routes"
 
 /**
  * Debug loggin
@@ -27,6 +28,11 @@ app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
 
 /**
+ * Router
+ */
+app.use('/api', router)
+
+/**
  * Serving static production files
  */
 if (process.env.NODE_ENV === "production") {
@@ -40,7 +46,7 @@ if (process.env.NODE_ENV === "production") {
 /**
  * 404 Handler
  */
-app.use((req: express.Request, res: express.Response, next: NextFunction) => {
+app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
   const err = new Error("404 Page not found.");
   err.message = "404";
   next(err);
@@ -49,7 +55,7 @@ app.use((req: express.Request, res: express.Response, next: NextFunction) => {
 /**
  * Error Handler
  */
-app.use((err: Error, req: express.Request, res: express.Response, next: NextFunction) => {
+app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
   res.status(Number(err.message) || 500).json(err);

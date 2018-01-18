@@ -5,6 +5,8 @@ const lusca = require('lusca');
 const morgan = require('morgan');
 const path = require('path');
 
+const router = require('./routes');
+
 /**
  * Debug loggin
  */
@@ -24,6 +26,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
+
+/**
+ * Router
+ */
+app.use('/api', router);
 
 /**
  * Serving static production files
